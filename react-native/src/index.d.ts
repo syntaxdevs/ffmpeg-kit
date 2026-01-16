@@ -1,4 +1,4 @@
-declare module 'ffmpeg-kit-react-native' {
+declare module '@wokcito/ffmpeg-kit-react-native' {
 
   export abstract class AbstractSession implements Session {
 
