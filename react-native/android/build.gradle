@@ -57,6 +57,10 @@ repositories {
   mavenCentral()
   google()
 
+  flatDir {
+    dirs "$rootDir/libs"
+  }
+
   def found = false
   def defaultDir = null
   def androidSourcesName = 'React Native sources'
@@ -125,5 +129,14 @@ repositories {
 
 dependencies {
   api 'com.facebook.react:react-native:+'
+
+  def localAarPath = new File("$rootDir/libs/ffmpeg-kit.aar")
+
+  if (localAarPath.exists()) {
+    implementation(name: 'ffmpeg-kit', ext: 'aar')
+    logger.info(":${project.name}: Using local ffmpeg-kit.aar at ${localAarPath.canonicalPath}")
+    return
+  }
+
   implementation 'com.arthenica:ffmpeg-kit-' + safePackageName(safeExtGet('ffmpegKitPackage', 'https')) + ':' + safePackageVersion(safeExtGet('ffmpegKitPackage', 'https'))
 }
