@@ -39,6 +39,7 @@ android.iml
 # Cocoapods
 #
 example/ios/Pods
+ffmpeg-kit-ios-full/
 
 # node.js
 #

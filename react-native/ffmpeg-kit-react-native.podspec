@@ -14,9 +14,21 @@ Pod::Spec.new do |s|
   s.requires_arc      = true
   s.static_framework  = true
 
-  s.source       = { :git => "https://github.com/arthenica/ffmpeg-kit.git", :tag => "react.native.v#{s.version}" }
+  s.source = { :path => __dir__ }
 
-  s.default_subspec   = 'https'
+  # Downloads iOS xcframeworks for the +full subspec (syntaxdevs release)
+  s.prepare_command = <<-CMD
+    set -e
+    FRAMEWORKS_DIR="ffmpeg-kit-ios-full"
+    ZIP_URL="https://github.com/syntaxdevs/ffmpeg-kit/releases/download/ios-binaries-6.0/ffmpeg-kit-ios-full.zip"
+    if [ ! -d "${FRAMEWORKS_DIR}/ffmpegkit.xcframework" ]; then
+      echo "Downloading FFmpegKit iOS full binaries..."
+      curl -fsSL "${ZIP_URL}" -o "${TMPDIR:-/tmp}/ffmpeg-kit-ios-full.zip"
+      unzip -o "${TMPDIR:-/tmp}/ffmpeg-kit-ios-full.zip" -d .
+    fi
+  CMD
+
+  s.default_subspec   = 'full'
 
   s.dependency "React-Core"
 
@@ -107,7 +119,7 @@ Pod::Spec.new do |s|
   s.subspec 'full' do |ss|
       ss.source_files      = '**/FFmpegKitReactNativeModule.m',
                              '**/FFmpegKitReactNativeModule.h'
-      ss.dependency 'ffmpeg-kit-ios-full', "6.0"
+      ss.vendored_frameworks = 'ffmpeg-kit-ios-full/*.xcframework'
       ss.ios.deployment_target = '12.1'
   end
 
